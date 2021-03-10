@@ -1,0 +1,54 @@
+spring:
+  application:
+    name: luw
+  profiles:
+    active: test
+  rabbitmq:
+    host: 192.168.186.130 #主机地址
+    port: 5672 #服务器端口
+    username: admin #用户名
+    password: admin #用户密码
+    virtual-host: / #连接到rabbitmq的vhost 用户组起到隔离作用
+    # addresses: 192.168.186.130:5672 #指定client连接到的server的地址，多个以逗号分隔（优先取address，然后取host）
+    requested-heartbeat: 10s #指定心跳 单位s 0为不指定；默认60
+    # publisher-confirms: true  发布确认属性 已过期
+    publisher-returns: true #是否启用【发布返回】
+    publisher-confirm-type: correlated #【发布确认返回】 三种模式 simple correlated none NONE值是禁用发布确认模式，是默认值  CORRELATED值是发布消息成功到交换器后会触发回调方法
+    connection-timeout: 60s # 链接超时，0表示无穷大，不超时
+    template:
+      mandatory: true #启用强制信息，默认false
+      receive-timeout: 300s #receive() 操作的超时时间
+      reply-timeout: 1800s #sendAndReceive() 操作的超时时间
+      retry:
+        enabled: true #发送重试是否可用
+        max-attempts: 3 #最大重试次数
+        initial-interval: 5s #第一次和第二次尝试发布或传递消息之间的间隔
+        max-interval: 30s #最大重试时间间隔
+        multiplier: 2 #应用于上一重试间隔的乘数
+    listener:
+      type: direct #启动的类型
+      simple:
+        auto-startup: false #是否启动时自动启动容器
+        acknowledge-mode: manual #表示消息确认方式，有三种配置 分别是 none manual 和 auto 默认auto
+        concurrency: 5 #最小的消费者数量
+        max-concurrency: 10 #最大消费者数量
+        prefetch: 1 #指定一个请求能处理多少个消息，如果有事务的话必须大于等于transaction数量
+        transaction-size: 1 #指定一个事务处理的消息数量，最好小于等于prefetch数量
+        retry:
+          enabled: true #监听重试是否可用
+          max-attempts: 5 #最大重试次数
+          initial-interval: 10s #第一次和第二次尝试发布和传递消息之间的间隔
+          multiplier: 2 #应用于上一次重试间隔的乘数
+          max-interval: 300s #最大重试时间间隔
+      direct:
+        auto-startup: false #是否启动时自动启动容器
+        acknowledge-mode: manual #表示消息确认方式，有三种配置 分别是 none manual 和 auto 默认auto
+        prefetch: 30 #指定一个请求能处理多少个消息，如果有事务的话必须大于等于transaction数量
+        consumers-per-queue: 5 #每个队列消费者数量
+        retry:
+          enabled: true #监听重试是否可用
+          max-attempts: 5 #最大重试次数
+          initial-interval: 10s  #第一次和第二次尝试发布和传递消息之间的间隔
+          multiplier: 2 #应用于上一次重试间隔的乘数
+          max-interval: 300s #最大重试时间间隔
+
