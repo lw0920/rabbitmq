@@ -4,11 +4,4 @@ spring:
     port: 5672
     username: admin
     password: admin
-    listener:
-      type: direct
-      direct:
-        auto-startup: false
-        acknowledge-mode: manual
-        prefetch: 30
-        consumers-per-queue: 5
     virtual-host: /
